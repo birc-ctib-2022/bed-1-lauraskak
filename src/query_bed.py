@@ -30,24 +30,15 @@ def main() -> None:
 
     # FIXME: put your code here
 
-    # print(args)
-    # print(args.bed)
-    # print(args.query)
-    # print(args.outfile)
-
     table = Table()
 
     for line in args.bed:
-        #print(line)
         bedline = parse_line(line)
-        #print(bedline)
         table.add_line(bedline)
         
     for line in args.query:
-        #print(line)
 
         query_lst = line.split("\t")
-        #print(query_lst)
 
         query_chrom = query_lst[0]
         query_start = int(query_lst[1])
