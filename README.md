@@ -65,9 +65,42 @@ When you have implemented the tool, answer the questions below, commit it to Git
 ## Questions
 
 How does your method for extracting features work?
+    It first creates the table with BedLine objects for every line in the bed-file.
+    Then it takes a line at a time from the query file. For each line it extracts the list of BedLine objects with the same chromosome as the query. Then it goes through this list and checks if BedLine has a start bigger than the query and a end smaller that the query. This means that that perticular region is with the query and it is therefore added as a line in the outputfile. 
 
 What is the complexity of the algorithm, as a function of the size of the two input files? When you answer this, you need to know that you can get the list of chromosomse from a `query.Table` in constant time, but it does, of course, take longer to run through all the lines in it.
+    O(n*m), where n is the length of the bedfile and m is the length of the query. This is assuming that extracting all overlapping features to one query take konstant time. 
 
 Did you, at any point, exploit that our features are on single nucleotides and not larger regions?
+    No. Unless you think it is exploiting it, that i only included the features that were within the query.
 
 If you did, what would it take to handle general regions?
+    If it is general regions I need to know if I only want to extract the region where both start and end-positions are within the query. If you also want to extract regions where only the head or the tail overlaps with the query, then i would add elif-statements.
+
+    The code now:
+        if query_start <= bed_start and query_end >= bed_end:
+            print_line(bedline, args.outfile)
+    
+    In this case we only accept the following possibility:
+
+    query:      ---------------------
+    bed:                  ---------
+
+    New code:
+        if query_start <= bed_start and query_end >= bed_end:
+            print_line(bedline, args.outfile)
+        elif query_start < bed_end and query_start > bed_end:
+            print_line(bedline, args.outfile)
+        elif query_end < bed_end and query_end > bed_start:
+            print_line(bedline, args.outfile)
+
+    In this case we accept all the following possibilities:
+
+    query:      ---------------------
+    bed:                  ---------
+
+    query:            ---------------------
+    bed:        ---------
+
+    query:      ---------------------
+    bed:                        ---------
