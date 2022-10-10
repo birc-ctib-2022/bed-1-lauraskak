@@ -28,7 +28,19 @@ def main() -> None:
     args = argparser.parse_args()
 
     # With all the options handled, we just need to do the real work
+
+    
     # FIXME: put your code here
+    
+    for line in args.infile:
+
+        # Takes a line from the input file in the bed-file and translates 
+        # into a object of the BedLine class created in the bed.py code
+        bedline = parse_line(line)
+
+        # Takes the BedLine object and inputs the formatted line into
+        # the outfile
+        print_line(bedline, args.outfile)
 
 
 if __name__ == '__main__':
